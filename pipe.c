@@ -4,7 +4,7 @@
 #include <string.h>
 #include <time.h>
 
-#define INTSIZE 50
+#define INTSIZE 25
 int main(int argc, char **argv) {
         int pid;
         int fd[2]; //pipe
