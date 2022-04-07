@@ -2,6 +2,7 @@
 #include <unistd.h>     /* fork() and getpid() */
 #include <stdio.h>      /* printf() */
 #include <string.h>
+#include <time.h>
 
 #define INTSIZE 50
 int main(int argc, char **argv) {
@@ -24,7 +25,8 @@ int main(int argc, char **argv) {
                 /* tutup bagian input dari pipe */
                 close(fd[0]);
                 
-                int randomNumberProducer[sizeof(procces) + 1];
+                srand(time(0);
+                int randomNumberProducer[sizeof(procces)];
                 for (int i = 0; i < procces; i++) {
                     randomNumberProducer[i] = rand() % 50;
                     printf("Producer menghasilkan angka : %d\n", randomNumberProducer[i]);
