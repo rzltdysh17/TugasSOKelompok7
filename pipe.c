@@ -3,38 +3,50 @@
 #include <stdio.h>      /* printf() */
 #include <string.h>
 
-#define MSGSIZE 100
-
+#define INTSIZE 50
 int main(int argc, char **argv) {
-        char inbuf[MSGSIZE]; //buffer
         int pid;
         int fd[2]; //pipe
+        int procces;
+        int buffer[INTSIZE];
+        
         //create pipe
         if (pipe(fd) < 0) {
             exit(1); //error
         }
         printf("mulai \n");
+        printf("Masukan Jumlah Proses : ");
+        scanf("%d", &procces);
+        
         switch (pid = fork()) {
         case 0:         /* fork returns 0 ke proses anak */
                 printf("Proses anak \n");
-                // tulis data ke pipe
-                char* msg1  = "ini pesan child \0"; // simbol \0 adalah end of string
-                char* msg2  = "pesan kedua ...  \0"; 
                 /* tutup bagian input dari pipe */
                 close(fd[0]);
+                
+                int randomNumberProducer[sizeof(procces) + 1];
+                for (int i = 0; i < procces; i++) {
+                    randomNumberProducer[i] = rand() % 50;
+                    printf("Producer menghasilkan angka : %d\n", randomNumberProducer[i]);
+                }
+                
                 // tulis ke pipe
-                write(fd[1], msg1, MSGSIZE);
-                write(fd[1], msg2, MSGSIZE);
+                write(fd[1], randomNumberProducer, INTSIZE);
                 break;
         default:        /* fork returns pid ke proses ortu */
                 printf("Proses ortu\n");
                 /* tutup bagian output dari pipe */
                 close(fd[1]);
-                // baca yang ditulis child dari pipe
-                read(fd[0], inbuf, MSGSIZE); //buffer terisi
-                printf("proses child menulis pesan ke-1: %s \n", inbuf);
-                read(fd[0], inbuf, MSGSIZE); //buffer terisi
-                printf("proses child menulis pesan ke-2: %s \n", inbuf);
+                read(fd[0], buffer, INTSIZE);
+                
+                int totalNumber = 0;
+                for (int i = 0; i < procces; i++) {
+                    printf("Consumer Mengambil angka : %d\n", buffer[i]);
+                    totalNumber = totalNumber + buffer[i];
+                }
+                
+                printf("Total Number yang diterima Consumer : %d\n", totalNumber);
+                
                 break;
         case -1:        /* error */
                 perror("fork");
