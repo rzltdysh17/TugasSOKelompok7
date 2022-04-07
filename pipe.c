@@ -25,7 +25,7 @@ int main(int argc, char **argv) {
                 /* tutup bagian input dari pipe */
                 close(fd[0]);
                 
-                srand(time(0);
+                srand(time(0));
                 int randomNumberProducer[sizeof(procces)];
                 for (int i = 0; i < procces; i++) {
                     randomNumberProducer[i] = rand() % 50;
