@@ -6,7 +6,7 @@
 #include <errno.h>	    /* errno */
 #include <time.h>	    /* time */
 
-#define INTSIZE 50
+#define INTSIZE 25
 
 int main(int argc, char **argv) {
         int pid;
