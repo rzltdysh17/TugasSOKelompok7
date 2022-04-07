@@ -5,14 +5,18 @@
 #include <sys/wait.h>   /*wait*/
 #include <errno.h>	    /* errno */
 
-#define MSGSIZE 3
+#define INTSIZE 50
 
 int main(int argc, char **argv) {
         int pid;
+        int proccesProd;
+        int proccesCon;
 
         printf("mulai \n");
-
-        int size = MSGSIZE * sizeof(int);
+        // printf("Masukan Jumlah Proses : ");
+        // scanf("%d", &procces);
+        
+        int size = INTSIZE * sizeof(int);
         //buat memory map
         void *addr = mmap(0, size, PROT_READ | PROT_WRITE, MAP_SHARED | MAP_ANONYMOUS, -1, 0);
         printf("Mapped at %p\n", addr);
@@ -21,9 +25,13 @@ int main(int argc, char **argv) {
         case 0:         /*  proses anak */
                 printf("Proses anak \n");
                 //isi data di memory map
-                shared[0] = 5;
-                shared[1] = 4;
-                shared[2] = 3;
+                printf("Masukan Jumlah Proses Producer : ");
+                scanf("%d", &proccesProd);
+                
+                for (int i = 0; i < proccesProd; i++) {
+                    shared[i] = rand() % 50;
+                    printf("Producer menghasilkan angka : %d\n", shared[i]);
+                }
                 break;
         default:        /*  ortu */
                 printf("Proses ortu\n");
@@ -32,9 +40,15 @@ int main(int argc, char **argv) {
                 while (pidWait = wait(&status)) {   
                     if (pidWait == pid)  /* child sukses selesai*/
                         //cetak isi memory map
-                        for (int i = 0; i<MSGSIZE; i++) {
-                          printf("ini parent, proses child menulis: %d \n", shared[i]);
+                        printf("Masukan Jumlah Proses Consumer : ");
+                        scanf("%d", &proccesCon);
+                        int totalNumber = 0;
+                        
+                        for (int i = 0; i<proccesCon; i++) {
+                            printf("Consumer menerima angka: %d\n", shared[i]);
+                            totalNumber = totalNumber + shared[i];
                         }
+                        printf("Total Number yang diterima Consumer : %d\n", totalNumber);
                         break; //keluar dari loop wait
                     if ((pidWait == -1) && (errno != EINTR)) {
                         /* ada error*/
